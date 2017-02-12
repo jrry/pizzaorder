@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">#{msgs.Components}</ui:define>
+
+        <ui:define name="srodek">
+            <div class="main_title">#{msgs.ComponentsManage}</div>
+            <div class="main_content">
+                <h:form id="form">
+                    <p:dataTable id="dt" var="cmp" value="#{componentsEdit.components}" paginator="true" rows="10" paginatorPosition="bottom" 
+                                 rowKey="#{cmp.name}" selection="#{componentsEdit.selectedComponent}" selectionMode="single"
+                                 emptyMessage="#{msgs.ComponentsNotFound}" widgetVar="cmpTable"
+                                 filteredValue="#{componentsEdit.filteredComponents}">
+                        
+                        <p:ajax event="rowSelect" update=":form:uupdate:display" oncomplete="PF('cmpDialog').show()" />
+                        
+                        <f:facet name="header">
+                            #{msgs.SelectComponent}
+                        </f:facet>
+                        
+                        <p:column sortBy="#{cmp.name}" filterBy="#{cmp.name}" headerText="#{msgs.ComponentName}">
+                            <h:outputText value="#{cmp.name}" />
+                        </p:column>
+                        <p:column sortBy="#{cmp.priority}" filterBy="#{cmp.priority}" headerText="#{msgs.Priority}">
+                            <h:outputText value="#{cmp.priority}" />
+                        </p:column>
+                    </p:dataTable>
+                    <div class="c2">
+                        <p:commandButton value="#{msgs.AddComponent}" update=":aadd:display2" oncomplete="PF('addDialog').show()" styleClass="center_button"/>
+                    </div>
+                    <p:dialog header="#{msgs.Edit}" widgetVar="cmpDialog" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+                        <h:form id="uupdate">
+                            <h:panelGrid id="display" columns="2" cellpadding="4">
+                                <h:outputText value="ID: " />
+                                <h:outputText value="#{componentsEdit.selectedComponent.id}" />
+                                <h:outputText value="#{msgs.ComponentName}:" />
+                                <h:inputText value="#{componentsEdit.selectedComponent.name}" id="uname"/>
+                                <h:outputText value="#{msgs.Priority}:" />
+                                <h:inputText value="#{componentsEdit.selectedComponent.priority}" id="uprio"/>
+                                <p:commandButton actionListener="#{componentsEdit.update()}" update=":form:dt" value="#{msgs.Update}" icon="ui-icon-disk" styleClass="center_button" oncomplete="PF('cmpDialog').hide();"/>
+                                <p:commandButton actionListener="#{componentsEdit.remove()}" update=":form:dt" value="#{msgs.Delete}" icon="ui-icon-closethick" styleClass="center_button" oncomplete="PF('cmpDialog').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                </h:form>
+                <p:dialog header="#{msgs.Addition}" widgetVar="addDialog" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+                    <h:form id="aadd">
+                        <h:panelGrid id="display2" columns="2" cellpadding="4">
+                            <h:outputText value="#{msgs.ComponentName}:" />
+                            <h:inputText value="#{componentsEdit.name}" id="uname"/>
+                            <h:outputText value="#{msgs.Priority}:" />
+                            <h:inputText value="#{componentsEdit.priority}" id="uprio"/> 
+                        </h:panelGrid>
+                        <p:commandButton actionListener="#{componentsEdit.add()}" update=":form:dt" value="#{msgs.Add}" icon="ui-icon-disk" styleClass="center_button" oncomplete="PF('addDialog').hide();"/>
+                    </h:form>
+                </p:dialog>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

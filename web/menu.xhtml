@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">Menu</ui:define>
+
+        <ui:define name="srodek">
+            <p:growl id="growl"/>  
+            <div class="main_title">Menu</div>
+            <div class="main_content">
+                <ui:fragment rendered="#{empty request.remoteUser}">
+                    <p:dataList id="idp" value="#{pizzaAdd.pizzas}" var="plist" paginator="true" rows="10" emptyMessage="#{msgs.EmptyPizza}" paginatorPosition="bottom" styleClass="paginated" type="ordered">
+                        <f:facet name="header">#{msgs.PizzaList}</f:facet>
+                        <h:outputText value="#{plist.pname}" />
+                        <h:panelGrid columns="2" cellpadding="4" cellspacing="0" class="component">
+                            <h:outputText value="#{msgs.Small}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.sprice}">
+                                <f:convertNumber pattern="#0.00 zł" />
+                            </h:outputText>
+                            <h:outputText value="#{msgs.Big}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.bprice}">
+                                <f:convertNumber pattern="#0.00 zł" />
+                            </h:outputText>
+                            <h:outputText value="#{msgs.Components}:" style="font-weight: 800" />
+                            <ui:repeat value="#{plist.pcomponents}" var="plist2">
+                                #{plist2.name}
+                            </ui:repeat>
+                        </h:panelGrid>
+                    </p:dataList>
+                </ui:fragment>
+                <ui:fragment rendered="#{not empty request.remoteUser}">
+                    <h:form id="form">
+                        <p:dataList id="dlp" value="#{pizzaAdd.pizzas}" var="plist" paginator="true" rows="10" emptyMessage="#{msgs.EmptyPizza}" paginatorPosition="bottom" styleClass="paginated" type="ordered">
+                            <f:facet name="header">#{msgs.PizzaList}</f:facet>
+                            <h:outputText value="#{plist.pname}" /> 
+                            <h:panelGrid columns="2" cellpadding="4" cellspacing="0" class="component">
+                                <p:commandButton update=":form:selected" actionListener="#{orderManager.update(plist, plist.sprice)}" value="#{msgs.Small}" icon="ui-icon-cart"/>
+                                <h:outputText value="#{plist.sprice}">
+                                    <f:convertNumber pattern="#0.00 zł" />
+                                </h:outputText>
+                                <p:commandButton update=":form:selected" actionListener="#{orderManager.update(plist, plist.bprice)}" value="#{msgs.Big}" icon="ui-icon-cart"/>                 
+                                <h:outputText value="#{plist.bprice}">
+                                    <f:convertNumber pattern="#0.00 zł" />
+                                </h:outputText>
+                                <h:outputText value="#{msgs.Components}:" style="font-weight: 800" />
+                                <ui:repeat value="#{plist.pcomponents}" var="plist2">
+                                    #{plist2.name}
+                                </ui:repeat>
+                            </h:panelGrid>
+                        </p:dataList>
+                        <p:dataList id="selected" value="#{orderManager.selectedPizzas}" var="plistsel" paginator="true" rows="10" emptyMessage="#{msgs.EmptyOrders}" paginatorPosition="bottom" styleClass="paginated" type="unordered" itemType="none">
+                            <f:facet name="header">#{msgs.Quantity}: #{orderManager.quantity}  | #{msgs.Price}: 
+                                <h:outputText value="#{orderManager.price}">
+                                    <f:convertNumber pattern="#0.00 zł" />
+                                </h:outputText>
+                            </f:facet>
+                            <p:commandLink update=":form:selected" actionListener="#{orderManager.delete(plistsel, plistsel.price)}" title="#{msgs.Delete}" styleClass="ui-icon ui-icon-closethick" style="float:left;margin-right:1px"/>
+                            <h:outputText value="#{plistsel.name} " />
+                            <h:panelGrid columns="2" cellpadding="4" cellspacing="0" class="component">
+                                <h:outputText value="#{orderManager.bigsmall(plistsel)}" style="font-weight: 800" />
+                                <h:outputText value="#{plistsel.price}">
+                                    <f:convertNumber pattern="#0.00 zł" />
+                                </h:outputText>
+                                <h:outputText value="#{msgs.Quantity}:" style="font-weight: 800" />
+                                <h:outputText value="#{plistsel.quantity}" />
+                            </h:panelGrid>
+                            <f:facet name="footer">
+                                <p:commandButton value="#{msgs.OrderCreate}" update=":form2:ordergrid" rendered="#{not empty orderManager.selectedPizzas}" styleClass="center_button" oncomplete="PF('ordDialog').show();"/>
+                            </f:facet>
+                        </p:dataList>
+                    </h:form>
+                    <p:dialog header="#{msgs.Addition}" widgetVar="ordDialog" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+                        <h:form id="form2">
+                            <h:panelGrid id="ordergrid" columns="2" cellpadding="6">
+                                <h:outputText value="#{msgs.Address}:" />
+                                <h:outputText value="#{userInfo.user.address}" />
+                                <h:outputText value="#{msgs.PhoneNo}:" />
+                                <h:outputText value="#{userInfo.user.phone}" />
+                                <h:outputText value="#{msgs.Price}: " />
+                                <h:outputText value="#{orderManager.price}">
+                                    <f:convertNumber pattern="#0.00 zł" />
+                                </h:outputText>
+                                #{msgs.Order}:
+                                <ul>
+                                    <ui:repeat value="#{orderManager.selectedPizzas}" var="slpl">
+                                        <li class="lista">#{slpl.name} (#{slpl.quantity}x#{orderManager.bigsmall(slpl)})</li>
+                                    </ui:repeat>
+                                </ul>
+                            </h:panelGrid>
+                            <p:commandButton value="#{msgs.Confirm}" ajax="false" action="#{orderManager.order(userInfo.user)}" styleClass="center_button" oncomplete="PF('ordDialog').hide();"/>
+                        </h:form>
+                    </p:dialog>
+                </ui:fragment>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

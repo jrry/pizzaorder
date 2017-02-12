@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="./theme.xhtml">
+        
+        <ui:define name="tytul_strony">#{msgs.UserSetting}</ui:define>
+        
+        <ui:define name="srodek">
+            <div class="main_title">#{msgs.UserSetting}</div>
+            <div class="main_content">
+                <h:form id="edt">
+                    <div class="c1">
+                        <p:messages globalOnly="true"/>
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Username}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:inputText value="#{userInfo.user.username}" id="nick" disabled="true" title="#{msgs.Nickt}"/>
+                            <p:message for="nick" />
+                            <p:tooltip for="nick" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                        </h:panelGrid>
+                    </div>
+                    <div class="c2">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Email}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:inputText value="#{edit.email}" id="email" title="#{msgs.Mailt}"/>
+                            <p:message for="email" />
+                            <p:tooltip for="email" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                        </h:panelGrid>
+                    </div>
+                    <div class="c1">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Password}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:password value="#{edit.password}" id="pass" match="pass2" title="#{msgs.Passt}"/>
+                            <p:message for="pass" />
+                            <p:tooltip for="pass" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                        </h:panelGrid>
+                    </div>
+                    <div class="c2">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Password2}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:password value="#{edit.password}" id="pass2" title="#{msgs.Pass2t}"/>
+                            <p:message for="pass2" />
+                            <p:tooltip for="pass2" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                        </h:panelGrid>
+                    </div>
+                    <div class="c1">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Address}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:inputText value="#{edit.address}" id="address" title="#{msgs.Addresst}"/>
+                            <p:message for="address" />
+                            <p:tooltip for="address" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                        </h:panelGrid>
+                    </div>
+                    <div class="c2">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Phone}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:inputText value="#{edit.telefon}" id="phone" title="#{msgs.Phonet}"/>
+                            <p:message for="phone" />
+                            <p:tooltip for="phone" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                        </h:panelGrid>
+                    </div>
+                    <div class="c1">
+                        <p:commandButton value="#{msgs.Update}" action="#{edit.save(userInfo.user)}" ajax="false" styleClass="center_button"/>
+                    </div>
+                </h:form>
+            </div>
+        </ui:define>
+        
+    </ui:composition>
+</html>
+

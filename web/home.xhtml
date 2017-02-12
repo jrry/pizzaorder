@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">Pizzeria</ui:define>
+
+        <ui:define name="srodek">
+            <p:growl id="growl"/>  
+            <div class="main_title">#{msgs.Home}</div>
+            <div class="main_content">
+                <p:feedReader value="http://blog.pizzaportal.pl/feed/" var="feed" size="5">
+                    <h:outputText value="#{feed.title}" style="font-weight: bold;display:block"/>
+                    <h:outputText value="#{feed.description.value}" escape="false"/>
+                    <p:separator />
+                </p:feedReader>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

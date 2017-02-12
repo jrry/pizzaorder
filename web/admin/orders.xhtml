@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">#{msgs.OrderList}</ui:define>
+
+        <ui:define name="srodek">
+            <div class="main_title">#{msgs.Orders}</div>
+            <div class="main_content">
+                <h:form id="fzam">
+                    <p:dataList id="idp" value="#{orderList.orders}" var="plist" paginator="true" rows="10" emptyMessage="#{msgs.EmptyOrders}" paginatorPosition="bottom" styleClass="paginated" type="ordered">
+                        <f:facet name="header">#{msgs.OrderList}</f:facet>
+                        <h:panelGrid columns="3" columnClasses="left minwidth,center three,right three" class="center_button">
+                            <p:selectOneButton value="#{plist.status}">
+                                <f:selectItem itemLabel="#{msgs.Waiting}" itemValue="1" />
+                                <f:selectItem itemLabel="#{msgs.Realized}" itemValue="2" />
+                                <p:ajax event="change" listener="#{orderList.update(plist)}" update=":fzam:idp"/>
+                            </p:selectOneButton>
+                            <h:outputText value="#{plist.date}">
+                                <f:convertDateTime pattern="yyyy-MM-dd HH:mm" timeZone="CET"/>
+                            </h:outputText>
+                            <p:commandButton actionListener="#{orderList.delete(plist)}" update=":fzam:idp" value="#{msgs.Delete}" icon="ui-icon-closethick">
+                                <p:confirm header="#{msgs.Confirmation}" message="#{msgs.DeleteConfirm}" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                <p:commandButton value="#{msgs.Yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="#{msgs.No}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" cellpadding="4" cellspacing="0" class="component">
+                            <h:outputText value="#{msgs.Address}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.user.address}">
+                                <f:convertNumber pattern="#0.00 zł" />
+                            </h:outputText>
+                            <h:outputText value="#{msgs.Price}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.price}">
+                                <f:convertNumber pattern="#0.00 zł" />
+                            </h:outputText>
+                            <h:outputText value="#{msgs.User}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.user.username}" />
+                            <h:outputText value="#{msgs.PhoneNo}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.user.phone}" />
+                            <h:outputText value="#{msgs.Order}:" style="font-weight: 800" />
+                            <ui:repeat value="#{plist.pizzas}" var="plist2">
+                                #{plist2.name} (#{plist2.quantity}x#{orderManager.bigsmall(plist2)})
+                            </ui:repeat>
+                        </h:panelGrid>
+                    </p:dataList>
+                </h:form>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

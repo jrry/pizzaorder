@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">#{msgs.Registration}</ui:define>
+
+        <ui:define name="srodek">
+            <ui:fragment rendered="#{empty request.remoteUser}">
+                <div class="main_title">#{msgs.Registration}</div>
+                <div class="main_content">
+                    <p:growl id="grwl" globalOnly="true" />
+                    <h:form id="regs">
+                        <div class="c1">
+                            <div class="cf napis">
+                                <h:outputText value="#{msgs.Username}:" />
+                            </div>
+                            <h:panelGrid columns="2">
+                                <p:inputText value="#{register.nick}" id="nick" title="#{msgs.Nickt}"/>
+                                <p:message for="nick" />
+                                <p:tooltip for="nick" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                            </h:panelGrid>
+                        </div>
+                        <div class="c2">
+                            <div class="cf napis">
+                                <h:outputText value="#{msgs.Email}:" />
+                            </div>
+                            <h:panelGrid columns="2">
+                                <p:inputText value="#{register.email}" id="email" placeholder="login@domena.pl" title="#{msgs.Mailt}"/>
+                                <p:message for="email" />
+                                <p:tooltip for="email" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                            </h:panelGrid>
+                        </div>
+                        <div class="c1">
+                            <div class="cf napis">
+                                <h:outputText value="#{msgs.Password}:" />
+                            </div>
+                            <h:panelGrid columns="2">
+                                <p:password value="#{register.password}" id="pass" match="pass2" title="#{msgs.Passt}"/>
+                                <p:message for="pass" />
+                                <p:tooltip for="pass" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                            </h:panelGrid>
+                        </div>
+                        <div class="c2">
+                            <div class="cf napis">
+                                <h:outputText value="#{msgs.Password2}:" />
+                            </div>
+                            <h:panelGrid columns="2">
+                                <p:password value="#{register.password}" id="pass2" title="#{msgs.Pass2t}"/>
+                                <p:message for="pass2" />
+                                <p:tooltip for="pass2" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                            </h:panelGrid>
+                        </div>                    
+                        <div class="c1">
+                            <div class="cf napis">
+                                <h:outputText value="#{msgs.Address}:" />
+                            </div>
+                            <h:panelGrid columns="2">
+                                <p:inputText value="#{register.address}" id="address" title="#{msgs.Addresst}"/>
+                                <p:message for="address" />
+                                <p:tooltip for="address" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                            </h:panelGrid>
+                        </div>
+                        <div class="c2">
+                            <div class="cf napis">
+                                <h:outputText value="#{msgs.Phone}:" />
+                            </div>
+                            <h:panelGrid columns="2">
+                                <p:inputText value="#{register.telefon}" id="phone" placeholder="501234567" title="#{msgs.Phonet}"/>
+                                <p:message for="phone" />
+                                <p:tooltip for="phone" showEvent="focus" hideEvent="blur" showEffect="slide" hideEffect="slide" />
+                            </h:panelGrid>
+                        </div>
+                        <div class="c1">
+                            <p:commandButton value="#{msgs.NewAccount}" action="#{register.register()}" ajax="false" styleClass="center_button"/>
+                        </div>
+                    </h:form>
+                </div>
+            </ui:fragment>
+            <ui:fragment rendered="#{not empty request.remoteUser}">
+                <div class="main_title">#{msgs.Registration}</div>
+                <div class="main_content">
+                    <div class="ui-messages ui-widget">
+                        <div class="ui-messages-error ui-corner-all">
+                            <span class="ui-messages-error-icon"></span>
+                            <ul>
+                                <li>
+                                    <span class="ui-messages-error-summary">#{msgs.Multiac}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="c1">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Username}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:inputText value="#{register.nick}" id="nick" disabled="true"/>
+                        </h:panelGrid>
+                    </div>
+                    <div class="c2">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Email}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:inputText value="#{register.email}" id="email" disabled="true"/>
+                        </h:panelGrid>
+                    </div>
+                    <div class="c1">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Password}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:password value="#{register.password}" id="pass" disabled="true"/>
+                        </h:panelGrid>
+                    </div>
+                    <div class="c2">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Password2}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:password value="#{register.password}" id="pass2" disabled="true"/>
+                        </h:panelGrid>
+                    </div>                    
+                    <div class="c1">
+                        <div class="cf napis">
+                            <h:outputText value="#{msgs.Phone}:" />
+                        </div>
+                        <h:panelGrid columns="2">
+                            <p:inputText value="#{register.telefon}" id="phone" disabled="true"/>
+                        </h:panelGrid>
+                    </div>
+                </div>
+            </ui:fragment>
+        </ui:define>
+
+    </ui:composition>
+</html>

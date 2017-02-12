@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">#{msgs.UserEdit}</ui:define>
+
+        <ui:define name="srodek">
+            <div class="main_title">#{msgs.UserEdit}</div>
+            <div class="main_content">
+                <p:growl id="growl" />
+                <h:form id="form">
+                    <p:dataTable id="dt" var="usr" value="#{userEdit.users}" paginator="true" rows="10" paginatorPosition="bottom" 
+                                 rowKey="#{usr.username}" selection="#{userEdit.selectedUser}" selectionMode="single"
+                                 emptyMessage="#{msgs.UsersNotFound}" widgetVar="usrTable"
+                                 filteredValue="#{userEdit.filteredUsers}">
+                        
+                        <p:ajax event="rowSelect" update=":form:uupdate:display" oncomplete="PF('usrDialog').show()" />
+                        
+                        <f:facet name="header">
+                            #{msgs.UserToEdit}
+                        </f:facet>
+                        
+                        <p:column sortBy="#{usr.username}" filterBy="#{usr.username}" headerText="#{msgs.Username}">
+                            <h:outputText value="#{usr.username}" />
+                        </p:column>
+                        <p:column sortBy="#{usr.email}" filterBy="#{usr.email}" headerText="#{msgs.EmailShort}">
+                            <h:outputText value="#{usr.email}" />
+                        </p:column>
+                        <p:column sortBy="#{usr.phone}" filterBy="#{usr.phone}" headerText="#{msgs.Phone}">
+                            <h:outputText value="#{usr.phone}" />
+                        </p:column>
+                        <p:column sortBy="#{usr.level}" filterBy="#{usr.level}" headerText="#{msgs.Permissions}">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('usrTable').filter()" >
+                                    <f:selectItems value="#{userEdit.levelOptions}" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{usr.level}" />
+                        </p:column>
+                    </p:dataTable>
+                    <p:dialog header="#{msgs.Edit}" widgetVar="usrDialog" resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+                        <h:form id="uupdate">
+                            <h:panelGrid id="display" columns="2" cellpadding="4">
+                                <h:outputText value="ID: #{userEdit.selectedUser.id}" />
+                                <p:selectOneButton value="#{userEdit.selectedUser.level}">
+                                    <f:selectItem itemLabel="Admin" itemValue="ADMIN" />
+                                    <f:selectItem itemLabel="User" itemValue="USER" />
+                                </p:selectOneButton>
+                                <h:outputText value="#{msgs.Username}:" />
+                                <h:inputText value="#{userEdit.selectedUser.username}" id="uname"/>
+                                <h:outputText value="#{msgs.Email}:" />
+                                <h:inputText value="#{userEdit.selectedUser.email}" id="umail"/>
+                                <h:outputText value="#{msgs.Phone}:" />
+                                <h:inputText value="#{userEdit.selectedUser.phone}" id="uphone"/>
+                                <p:commandButton actionListener="#{userEdit.update()}" update=":form:dt,:userinfo:logout" value="#{msgs.Update}" icon="ui-icon-disk" styleClass="center_button" oncomplete="PF('usrDialog').hide();"/>
+                                <p:commandButton actionListener="#{userEdit.remove()}" update=":form:dt,:growl" value="#{msgs.Delete}" icon="ui-icon-closethick" styleClass="center_button" oncomplete="PF('usrDialog').hide();"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                </h:form>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

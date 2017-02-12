@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">#{msgs.PizzaCreate}</ui:define>
+
+        <ui:define name="srodek">
+            <div class="main_title">#{msgs.PizzaCreate}</div>
+            <div class="main_content">
+                <p:growl id="growl" severity="info"/>
+                <p:tabView id="tabv">
+                    <p:tab id="v1" title="#{msgs.Add}">
+                        <h:form id="adp">
+                            <div class="c1">
+                                <div class="cf napis">
+                                    <h:outputText value="#{msgs.PizzaName}:" />
+                                </div>
+                                <h:panelGrid columns="2">
+                                    <p:inputText value="#{pizzaAdd.name}" id="pname"/>
+                                    <p:message for="pname" />
+                                </h:panelGrid>
+                            </div>
+                            <div class="c2">
+                                <div class="cf napis">
+                                    <h:outputText value="#{msgs.Components}:" />
+                                </div>
+                                <h:panelGrid columns="2">
+                                    <p:selectCheckboxMenu id="componentmenu" label="#{msgs.Select}" 
+                                                          value="#{pizzaAdd.selectedScmps}" panelStyle="width:150px">
+                                        <f:selectItems value="#{pizzaAdd.cmps}" var="cmp" itemLabel="#{cmp.name}" itemValue="#{cmp.name}" />
+                                        <f:validator validatorId="limitComponentsValidator" />
+                                        <f:attribute name="minLimit" value="2" />
+                                    </p:selectCheckboxMenu>
+                                    <p:message for="componentmenu" />
+                                </h:panelGrid>
+                            </div>
+                            <div class="c1">
+                                <div class="cf napis">
+                                    <h:outputText value="#{msgs.PriceSmallPizza}:" />
+                                </div>
+                                <h:panelGrid columns="2">
+                                    <p:inputText value="#{pizzaAdd.sprice}" id="spr"/>
+                                    <p:message for="spr" />
+                                </h:panelGrid>
+                            </div>
+                            <div class="c2">
+                                <div class="cf napis">
+                                    <h:outputText value="#{msgs.PriceBigPizza}:" />
+                                </div>
+                                <h:panelGrid columns="2">
+                                    <p:inputText value="#{pizzaAdd.bprice}" id="bpr"/>
+                                    <p:message for="bpr" />
+                                </h:panelGrid>
+                            </div>                    
+                            <div class="c1">
+                                <p:commandButton value="#{msgs.AddPizza}" action="#{pizzaAdd.savep()}" ajax="false" styleClass="center_button"/>
+                            </div>
+                        </h:form>
+                    </p:tab>
+                    <p:tab id="v2" title="#{msgs.Manage}">
+                        <h:form id="form2">
+                            <p:dataList id="idp" value="#{pizzaAdd.pizzas}" var="plist" paginator="true" rows="10" emptyMessage="#{msgs.EmptyPizza}" paginatorPosition="bottom" styleClass="paginated" type="unordered" itemType="none">
+                                <f:facet name="header">#{msgs.PizzaList}</f:facet>
+                                <p:commandLink update=":tabv:form2:uupdate:pizzaDetail" oncomplete="PF('pizzaDialog').show()" title="#{msgs.Details}" styleClass="ui-icon ui-icon-search" style="float:left;margin-right:1px">
+                                    <f:setPropertyActionListener value="#{plist}" target="#{pizzaAdd.selectedPizza}" />
+                                    <h:outputText value="#{plist.pname}" />
+                                </p:commandLink>
+                                <p:commandLink update=":tabv:form2:idp" actionListener="#{pizzaAdd.deletePizza(plist)}" title="#{msgs.Delete}" styleClass="ui-icon ui-icon-trash" style="float:left;margin-right:10px" >
+                                    <p:confirm header="#{msgs.Confirmation}" message="#{msgs.DeleteConfirm}" icon="ui-icon-alert" />
+                                </p:commandLink>
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton value="#{msgs.Yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="#{msgs.No}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                                <h:outputText value="#{plist.pname}" />
+                            </p:dataList>
+                            <p:dialog header="Info" widgetVar="pizzaDialog" showEffect="fade" hideEffect="fade" resizable="false" modal="true">
+                                <h:form id="uupdate">
+                                    <h:panelGrid id="pizzaDetail" columns="2" cellpadding="4" rendered="#{not empty pizzaAdd.selectedPizza}">
+                                        <h:outputText value="#{msgs.Name}:" style="font-weight: 800" />
+                                        <h:inputText id="pna" value="#{pizzaAdd.selectedPizza.pname}" />
+                                        <h:outputText value="#{msgs.PriceSmallShort}:" style="font-weight: 800" />
+                                        <h:inputText id="pspr" value="#{pizzaAdd.selectedPizza.sprice}" />
+                                        <h:outputText value="#{msgs.PriceBigShort}:" style="font-weight: 800" />
+                                        <h:inputText id="pbpr" value="#{pizzaAdd.selectedPizza.bprice}" />
+                                        <h:outputText value="#{msgs.Components}:" style="font-weight: 800" />
+                                        <p:inplace id="facet">
+                                            <f:facet name="output">
+                                                <ui:repeat value="#{pizzaAdd.selectedPizza.pcomponents}" var="plist2">
+                                                    #{plist2.name}
+                                                </ui:repeat>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:selectCheckboxMenu id="componentmenu" label="#{msgs.Select}" 
+                                                                      value="#{pizzaAdd.selectedScmps}" panelStyle="width:150px">
+                                                    <f:selectItems value="#{pizzaAdd.cmps}" var="cmp" itemLabel="#{cmp.name}" itemValue="#{cmp.name}" />
+                                                </p:selectCheckboxMenu>
+                                            </f:facet>
+                                        </p:inplace>
+                                        <h:inputHidden id="pid" value="#{pizzaAdd.selectedPizza.id}" />
+                                    </h:panelGrid>
+                                    <p:commandButton update=":tabv:form2:idp" 
+                                                     actionListener="#{pizzaAdd.updatePizza(pizzaAdd.selectedPizza, pizzaAdd.selectedScmps)}" 
+                                                     value="#{msgs.Update}" icon="ui-icon-disk" styleClass="center_button" oncomplete="PF('pizzaDialog').hide();" />
+                                </h:form>
+                            </p:dialog>
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

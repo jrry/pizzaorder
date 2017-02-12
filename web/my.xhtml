@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="./theme.xhtml">
+
+        <ui:define name="tytul_strony">#{msgs.Orders}</ui:define>
+
+        <ui:define name="srodek">
+            <p:growl id="growl"/>  
+            <div class="main_title">#{msgs.Orders}</div>
+            <div class="main_content">
+                <h:form id="fzam">
+                    <p:dataList id="idp" value="#{myOrders.getOrders(userInfo.user.id)}" var="plist" paginator="true" rows="10" emptyMessage="#{msgs.EmptyOrders}" paginatorPosition="bottom" styleClass="paginated" type="ordered">
+                        <f:facet name="header">#{msgs.OrderList}</f:facet>
+                        <h:panelGrid columns="2" columnClasses="left,right" class="center_button">
+                            <h:outputText value="#{myOrders.status(plist.status)}"/>
+                            <h:outputText value="#{plist.date}">
+                                <f:convertDateTime pattern="yyyy-MM-dd HH:mm" timeZone="CET"/>
+                            </h:outputText>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" cellpadding="4" cellspacing="0" class="component">
+                            <h:outputText value="#{msgs.Address}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.user.address}">
+                                <f:convertNumber pattern="#0.00 zł" />
+                            </h:outputText>
+                            <h:outputText value="#{msgs.Price}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.price}">
+                                <f:convertNumber pattern="#0.00 zł" />
+                            </h:outputText>
+                            <h:outputText value="#{msgs.PhoneNo}:" style="font-weight: 800" />
+                            <h:outputText value="#{plist.user.phone}" />
+                            <h:outputText value="#{msgs.Order}:" style="font-weight: 800" />
+                            <ui:repeat value="#{plist.pizzas}" var="plist2">
+                                #{plist2.name} (#{plist2.quantity}x#{orderManager.bigsmall(plist2)})
+                            </ui:repeat>
+                        </h:panelGrid>
+                    </p:dataList>
+                </h:form>
+            </div>
+        </ui:define>
+
+    </ui:composition>
+</html>

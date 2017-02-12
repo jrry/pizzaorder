@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl" xml:lang="pl"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp">
+
+    <h:head>
+        <meta name="author" content="Jarosław Pawłowski" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="default.css"/>
+        <link href="#{resource['images:pizza.ico']}" rel="shortcut icon" type="image/x-icon" />
+        <title><ui:insert name="tytul_strony">Tytuł</ui:insert></title>
+    </h:head>
+
+    <h:body>
+        <div id="top">
+            <div class="im" />
+        </div>
+        <div id="content">
+            <div id="lewa_strona">
+                <div class="panel">
+                    <div class="panel_body">
+                        <div class="panel_title">#{msgs.Admin}</div>
+                        <div class="panel_content">
+                            <ul id="panel_nav">
+                                <li>
+                                    <h:link value="#{msgs.PizzaCreate}" outcome="addpizza"/>
+                                    <h:link value="#{msgs.UserEdit}" outcome="useredit"/>
+                                    <h:link value="#{msgs.ComponentsManage}" outcome="cmpedit"/>
+                                    <h:link value="#{msgs.Orders}" outcome="orders"/>
+                                </li>
+                            </ul>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div id="prawa_strona">
+                <div class="panel">
+                    <div class="panel_body">
+                        <div class="panel_title">#{msgs.Userpanel}</div>
+                        <div class="panel_content">
+                            <ez:userinfo id="userinfo"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="srodek">
+                <div class="main_body">
+                    <ui:insert name="srodek">
+                        ŚRODEK STRONY
+                    </ui:insert>
+                </div>
+            </div>  
+        </div>
+        <div id="bottom">
+            <div class="left">
+                &copy; 2013-2014 Pizzeria<br/>
+                #{msgs.Cookie}
+            </div>
+            <div class="right">
+                #{msgs.Footerb}<br/>
+                Jarosław Pawłowski
+            </div>
+            <div class="center">
+                #{msgs.Adminpanel}<br/>
+                <h:link value="#{msgs.Out}" outcome="outhome"/>
+            </div>
+        </div>
+    </h:body>
+
+</html>
