@@ -29,14 +29,6 @@
         </developer>
     </developers>
     
-    <repositories>
-        <repository>
-            <id>ProjectRepo</id>
-            <name>Project Repo</name>
-            <url>file://${basedir}/lib</url>
-        </repository>
-    </repositories>
-    
     <dependencies>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -109,6 +101,26 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>lib/primefaces-5.0.1.jar</file>
+                            <groupId>primefaces</groupId>
+                            <artifactId>primefaces</artifactId>
+                            <version>5.0.1</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
